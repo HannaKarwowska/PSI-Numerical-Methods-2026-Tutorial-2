@@ -94,8 +94,8 @@ def serial_computation(M, N):
 
 
 def main():
-    M = 4096 # Number of random matrices
-    N = 20    # Matrix size (N×N)
+    M = 8096 # Number of random matrices
+    N = 10    # Matrix size (N×N)
 
     # Serial computation
     print("Running serial computation...")
@@ -140,3 +140,28 @@ def main():
 if __name__ == "__main__":
     main()
 
+"""
+
+M = 1096 # Number of random matrices
+N = 10    # Matrix size (N×N)
+listm = []
+listtime1 = []
+listtime2 = []
+for n in range(1,N):
+    listm.append(n)
+    #time for serial computation
+    start_time1 = time.time()
+    radii_serial = serial_computation(M, n)
+    serial_time1 = time.time() - start_time1
+    listtime1.append(serial_time1)
+
+    #time for parallel computation
+    start_time2 = time.time()
+    radii_parallel = parallel_computation(M, n)
+    parallel_time2 = time.time() - start_time2
+    listtime2.append(parallel_time2)
+
+plt.plot(listm,listtime1, label = 'Serial time')
+plt.plot(listm,listtime2, label = 'Parallel time')
+
+"""
