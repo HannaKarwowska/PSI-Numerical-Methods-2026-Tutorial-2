@@ -1,3 +1,13 @@
+import os
+# Set environment variables to disable NumPy's internal parallelization
+# This MUST be done before importing numpy
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 from multiprocessing import Pool, cpu_count
