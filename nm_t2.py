@@ -92,26 +92,46 @@ def serial_computation(M, N):
 
     return spectral_radii
 
+powers = np.arange(1,20)
+serial_times = np.zeros_like(powers)
+parallel_times = np.zeros_like(powers)
+speedups = np.zeros_like(powers)
 
 def main():
-    M = 8096 # Number of random matrices
-    N = 10    # Matrix size (N×N)
+    c=0
+    for p in powers:
+        
+        M = 2**p # Number of random matrices
+        N = 10    # Matrix size (N×N)
 
-    # Serial computation
-    print("Running serial computation...")
-    start_time = time.time()
-    radii_serial = serial_computation(M, N)
-    serial_time = time.time() - start_time
-    print(f"Serial computation time: {serial_time:.2f} seconds")
+        # Serial computation
+        print("Running serial computation...")
+        start_time = time.time()
+        radii_serial = serial_computation(M, N)
+        serial_time = time.time() - start_time
+        serial_times[c] = serial_time
+        print(f"Serial computation time: {serial_time:.2f} seconds")
 
-    # Parallel computation
-    print("\nRunning parallel computation...")
-    start_time = time.time()
-    radii_parallel = parallel_computation(M, N)
-    parallel_time = time.time() - start_time
-    print(f"Parallel computation time: {parallel_time:.2f} seconds")
-    print(f"Speedup: {serial_time/parallel_time:.2f}x")
+        # Parallel computation
+        print("\nRunning parallel computation...")
+        start_time = time.time()
+        radii_parallel = parallel_computation(M, N)
+        parallel_time = time.time() - start_time
+        parallel_times[c] = parallel_time
+        print(f"Parallel computation time: {parallel_time:.2f} seconds")
 
+        speedup = serial_time/parallel_time
+        speedups[c] = speedup
+        print(f"Speedup: {serial_time/parallel_time:.2f}x")
+
+        c = c+1
+    
+    plt.plot(powers, serial_times, label = "Serial time")
+    plt.plot(powers, parallel_times, label = "Parallel time")
+    plt.plot(powers, speedups, label = "speed up")
+    plt.legend()
+    plt.show()
+    """
     # Statistical analysis
     mean_radius = np.mean(radii_parallel)
     std_radius = np.std(radii_parallel)
@@ -119,15 +139,16 @@ def main():
     print(f"Standard deviation: {std_radius:.4f}")
     print(f"Theoretical Expected largest eigenvalue for N={N}: ~{np.sqrt(N):.2f}")
 
+        
     # Create histogram
     plt.figure(figsize=(10, 6))
     plt.hist(radii_parallel, bins=50, density=True, alpha=0.7, edgecolor='black')
     plt.axvline(mean_radius, color='red', linestyle='--', linewidth=2,
-                label=f'Mean = {mean_radius:.4f}')
+                    label=f'Mean = {mean_radius:.4f}')
     plt.xlabel('Spectral Radius', fontsize=12)
     plt.ylabel('Probability Density', fontsize=12)
     plt.title(f'Distribution of Spectral Radii for {M} Random {N}×{N} Matrices',
-              fontsize=14)
+                fontsize=14)
     plt.legend(fontsize=10)
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
@@ -135,10 +156,13 @@ def main():
     plt.show()
 
     print("\nHistogram saved as 'spectral_radius_distribution.png'")
+    """
 
 
 if __name__ == "__main__":
     main()
+
+
 
 """
 
